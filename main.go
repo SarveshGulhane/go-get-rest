@@ -13,9 +13,7 @@ type Article struct {
 	Content string `json:"content"`
 }
 
-// let's declare a global Articles array
-// that we can then populate in our main function
-// to simulate a database
+// let's declare a global Articles array that we can then populate in our main function to simulate a database
 var Articles []Article
 
 func homePage(w http.ResponseWriter, r *http.Request) {
@@ -30,8 +28,7 @@ func returnAllArticles(w http.ResponseWriter, r *http.Request) {
 
 func handleRequests() {
 	http.HandleFunc("/", homePage)
-	// add our articles route and map it to our
-	// returnAllArticles function like so
+	// add our articles route and map it to our returnAllArticles function like so
 	http.HandleFunc("/articles", returnAllArticles)
 	log.Fatal(http.ListenAndServe(":10000", nil))
 }
