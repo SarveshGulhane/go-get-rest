@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -40,10 +41,20 @@ func returnSingleArticle(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func createNewArticle(w http.ResponseWriter, r *http.Request) {
+	reqBody, _ := ioutil.ReadAll(r.Body)
+	var article Article
+	json.Unmarshal(reqBody, &article)
+
+	Articles = append(Articles, article)
+	json.NewEncoder(w).Encode(article)
+}
+
 func handleRequests() {
 	newRouter := mux.NewRouter().StrictSlash(true)
 	newRouter.HandleFunc("/", homePage)
 	newRouter.HandleFunc("/all", returnAllArticles)
+	newRouter.HandleFunc("/all", createNewArticle).Methods("POST")
 	newRouter.HandleFunc("/article/{id}", returnSingleArticle)
 	log.Fatal(http.ListenAndServe(":8080", newRouter))
 }
